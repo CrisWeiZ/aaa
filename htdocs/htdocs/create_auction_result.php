@@ -69,7 +69,8 @@
             data into the database. */
         if (empty($errors)) {
             // 准备SQL插入语句
-            $query = "INSERT INTO auctions (title, details, cName, startPrice, reservePrice, endTime) VALUES ('$title', '$details', '$category', $start_price, $reserve_price, '$end_date')";
+            $query = "INSERT INTO auctions (title, details, cName, startPrice, reservePrice, endTime) VALUES (?, ?, ?, ?, ?, ?)";
+
 
 
             // 执行插入操作
