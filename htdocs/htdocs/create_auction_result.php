@@ -31,10 +31,10 @@
         //使用 mysqli_real_escape_string 函数来清洗输入数据，以防止 SQL 注入攻击。
         //使用 trim 函数来去除用户输入的前后空白字符。
             
-            // Initialize an array to store potential errors
+        // Initialize an array to store potential errors
             $errors = [];
 
-            // Validate the input data
+        // Validate the input data
             if (empty($title)) {
                 $errors[] = "The title of the auction cannot be empty.";
             }
@@ -65,15 +65,31 @@
         }
 
 
-
 /* TODO #3: If everything looks good, make the appropriate call to insert
             data into the database. */
-            
+        if (empty($errors)) {
+            // 准备SQL插入语句
+            $query = "INSERT INTO auctions (title, details, cName, startPrice, reservePrice, endTime) VALUES ('$title', '$details', '$category', $start_price, $reserve_price, '$end_date')";
 
-// If all is successful, let user know.
-echo('<div class="text-center">Auction successfully created! <a href="FIXME">View your new listing.</a></div>');
+
+            // 执行插入操作
+            if (mysqli_query($connection, $query)) {
+                // 获取新创建的拍卖的ID
+                $auctionID = mysqli_insert_id($connection);
+
+                // If all is successful, let user know.
+                echo('<div class="text-center">Auction successfully created! <a href="mylistings.php?id=' . $new_auction_id . '">View your new listing.</a></div>');
+            } else {
+                // If the query failed, display or log the error information
+                echo "Database error: " . mysqli_error($connection);
+            }
+        }
 
 
+
+// Close the database connection
+mysqli_close($connection);
+        
 ?>
 
 </div>
