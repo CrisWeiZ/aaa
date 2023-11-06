@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Nov 03, 2023 at 07:41 PM
+-- Generation Time: Nov 06, 2023 at 05:02 PM
 -- Server version: 8.0.31
 -- PHP Version: 8.0.26
 
@@ -30,8 +30,9 @@ SET time_zone = "+00:00";
 DROP TABLE IF EXISTS `auction`;
 CREATE TABLE IF NOT EXISTS `auction` (
   `auctionID` int NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) NOT NULL,
   `userID` int DEFAULT NULL,
-  `itemName` varchar(76) DEFAULT NULL,
+  `details` text NOT NULL,
   `cName` varchar(27) DEFAULT NULL,
   `startPrice` float DEFAULT NULL,
   `reservePrice` float DEFAULT NULL,
@@ -39,41 +40,6 @@ CREATE TABLE IF NOT EXISTS `auction` (
   PRIMARY KEY (`auctionID`),
   KEY `cName` (`cName`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2300031 DEFAULT CHARSET=utf8mb3;
-
---
--- Dumping data for table `auction`
---
-
-INSERT INTO `auction` (`auctionID`, `userID`, `itemName`, `cName`, `startPrice`, `reservePrice`, `endTime`) VALUES
-(2300001, 3, 'ZARA Black Blazer Jacket size Eur XS Womens Button Up Outdoors Outerwear', 'Woman Outerwears', 20, 28, '2023-11-30 06:00:00'),
-(2300002, 10, 'COS Large Handbag/Tote bag', 'Woman Accessories', 21.5, 25, '2024-01-09 18:00:00'),
-(2300003, 5, 'Wilko Womens Black Rubber Wellies Boot UK 6 EU', 'Woman Shoes', 30, 35, '2023-11-05 12:00:00'),
-(2300004, 1, 'Superdry Mens Studios Merino Crew Jumper', 'Man Tops', 27, 30, '2023-12-18 18:51:45'),
-(2300005, 2, 'Reiss black accordian pleated knee length A line skirt size 8', 'Woman Skirts', 45, 45.5, '2024-01-08 19:00:00'),
-(2300006, 8, 'DKNY Handbag Mock Croc Dark Navy Blue Gold Hardware *GENUINE*', 'Woman Accessories', 13, 20, '2024-01-23 09:30:00'),
-(2300007, 2, 'Superdry Mens Shockrubber Sunglasses Size 1Size', 'Man Accessaries', 100, 105, '2024-01-31 18:15:00'),
-(2300008, 9, 'Polo Ralph Lauren Jumper Wool Cashmere Cable Knit Beige V-Neck Women\'s L', 'Woman Tops', 80, 89.9, '2024-01-01 14:15:00'),
-(2300009, 5, 'Timberland Mens Buttondown Shirt 100% Cotton XL', 'Man Tops', 23, 42, '2024-01-14 00:00:00'),
-(2300010, 11, 'Womens Zara Basic Jacket size M No.W863 11/5', 'Woman Outerwears', 35.5, 40, '2023-11-29 21:00:00'),
-(2300011, 7, 'Cosyfeet Mens Shoe Matty Wide Fit 3H Width Grey UK 12 Extra Roomy', 'Man Shoes', 90, 100, '2023-12-11 22:00:00'),
-(2300012, 9, 'Lacoste Sport Mens Polo Shirt Small / Size 4 Burgundy Cotton', 'Man Tops', 45, 50, '2023-12-05 23:15:00'),
-(2300013, 1, 'NIKE Black Leggings size S Womens Dri-Fit 3/4 Length Outdoors Outerwear', 'Woman Pants and Jeans', 30, 35.5, '2024-11-30 21:45:00'),
-(2300014, 3, 'Zara Denim Corset Top Size XS', 'Woman Tops', 41.5, 45, '2024-11-29 12:30:00'),
-(2300015, 10, 'LEVI\'S Blue Slim Taper Jeans size 27x34 Womens Outdoors Outerwear Womenswear', 'Woman Pants and Jeans', 34, 40, '2024-01-07 00:00:00'),
-(2300016, 2, 'Women’s Dorothy Perkins Tan Faux Suede Jacket Size 6', 'Woman Outerwears', 21.5, 25, '2023-12-14 20:00:00'),
-(2300017, 6, 'Mens Burton Polo Shirt Size L', 'Man Tops', 45, 49, '2023-12-13 18:57:32'),
-(2300018, 12, 'Brown Faux Leather Croc Side Bag Satchel Purse', 'Woman Accessories', 24, 25, '2024-02-07 06:00:00'),
-(2300019, 9, 'Theory knit dark purple high-neck midi dress size L', 'Woman Dresses and Jumpsuits', 25.9, 30, '2024-01-02 00:00:00'),
-(2300020, 5, 'Jack Wills Mens Minimal Graphic Crew Sweater', 'Man Tops', 20, 22, '2023-12-19 12:00:00'),
-(2300021, 10, 'weekday off white cream v waist jeans size small wide leg', 'Woman Pants and Jeans', 10.5, 12, '2023-12-23 18:00:00'),
-(2300022, 11, 'Tommy Hilfiger Mens Beige Size L Jumper Smart Designer', 'Man Tops', 17, 20, '2024-01-17 00:00:00'),
-(2300023, 3, 'Gerard Pasquier Knitted Scarf Rectangle Brown Checked Pattern Knit 68x200cm', 'Woman Accessories', 7, 7, '2023-11-29 11:30:00'),
-(2300024, 1, 'Grey Jumper Dress From New Look', 'Woman Dresses and Jumpsuits', 2.99, 4, '2023-11-14 10:30:00'),
-(2300025, 4, 'Mens hugo boss Jumper Being Size XL', 'Man Tops', 12, 15.5, '2024-01-14 12:00:00'),
-(2300026, 8, '&other stories blue denim High Neck button up Long Sleeve Shirt 34 6 Cotton', 'Woman Tops', 30, 35, '2023-11-21 14:00:00'),
-(2300027, 4, 'Asos Design Black Faux Leather Fringe Tassel Skirt, size 8', 'Woman Skirts', 21, 23, '2023-11-30 00:00:00'),
-(2300028, 10, 'Ted Baker Black Slip On Jelly Shoes Size UK5', 'Woman Shoes', 60, 60, '2024-01-28 20:00:00'),
-(2300029, 1, 'Mens Navy Champion Tshirt Size Medium In Excellent Condition', 'Man Tops', 43, 45, '2024-01-31 00:00:00');
 
 -- --------------------------------------------------------
 
