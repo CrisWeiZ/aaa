@@ -69,8 +69,7 @@
             data into the database. */
         if (empty($errors)) {
             // 准备SQL插入语句
-            $query = "INSERT INTO auctions (title, details, cName, startPrice, reservePrice, endTime) VALUES (?, ?, ?, ?, ?, ?)";
-
+            $query = "INSERT INTO auction (title, details, cName, startPrice, reservePrice, endTime) VALUES ('$title', '$details', '$category', $start_price, $reserve_price, '$end_date')";
 
 
             // 执行插入操作
@@ -79,11 +78,16 @@
                 $auctionID = mysqli_insert_id($connection);
 
                 // If all is successful, let user know.
-                echo('<div class="text-center">Auction successfully created! <a href="mylistings.php?id=' . $new_auction_id . '">View your new listing.</a></div>');
+                echo('<div class="text-center">Auction successfully created! <a href="mylistings.php?id=' . $auctionID . '">View your new listing.</a></div>');
             } else {
                 // If the query failed, display or log the error information
                 echo "Database error: " . mysqli_error($connection);
-            }
+            }} else {
+                // If there are errors in the $errors array, display them to the user
+                foreach ($errors as $error) {
+                    echo "<p>Error: $error</p>";
+                }
+            
         }
 
 
