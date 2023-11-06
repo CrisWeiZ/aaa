@@ -26,7 +26,7 @@
             $details = mysqli_real_escape_string($connection, trim($_POST['details']));
             $category = mysqli_real_escape_string($connection, trim($_POST['category']));
             $start_price = mysqli_real_escape_string($connection, trim($_POST['start_price']));
-            $reserve_price = isset($_POST['reserve_price']) && !empty($_POST['reserve_price']) ? mysqli_real_escape_string($connection, trim($_POST['reserve_price'])) : NULL;
+            $reserve_price = isset($_POST['reserve_price']) && !empty($_POST['reserve_price']) ? mysqli_real_escape_string($connection, trim($_POST['reserve_price'])) : '0';
             $end_date = mysqli_real_escape_string($connection, trim($_POST['end_date']));
         //使用 mysqli_real_escape_string 函数来清洗输入数据，以防止 SQL 注入攻击。
         //使用 trim 函数来去除用户输入的前后空白字符。
@@ -47,7 +47,7 @@
             if (!is_numeric($start_price) || floatval($start_price) <= 0) {
                 $errors[] = "The starting price must be a positive number.";
             }
-            if ($reserve_price !== NULL && (!is_numeric($reserve_price) || floatval($reserve_price) <= 0)) {
+            if ($reserve_price !== 0 && (!is_numeric($reserve_price) || floatval($reserve_price) < 0)) {
                 $errors[] = "The reserve price must be a positive number if provided.";
             }
             if (empty($end_date)) {
