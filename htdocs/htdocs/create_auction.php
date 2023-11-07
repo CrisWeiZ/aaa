@@ -44,9 +44,18 @@
           <div class="col-sm-10">
             <select class="form-control" id="auctionCategory" name="category">
               <option selected>Choose...</option>
-              <option value="fill">Fill me in</option>
-              <option value="with">with options</option>
-              <option value="populated">populated from a database?</option>
+              <option value="Woman Tops" >Woman Tops</option>
+              <option value="Woman Outerwears" >Woman Outerwears</option>
+              <option value="Woman Pants and Jeans" >Woman Pants and Jeans</option>
+              <option value="Woman Dress and Jumpsuit">Woman Dress and Jumpsuits</option>
+              <option value="Woman Shoes">Woman Shoes</option>
+              <option value="Woman Accessories">Woman Accessories</option>
+              <option value="Woman Skirts">Woman Skirts</option>
+              <option value="Man Tops">Man Tops</option>
+              <option value="Man Outerwears">Man Outerwears</option>
+              <option value="Man Pants and Jeans">Man Pants and Jeans</option>
+              <option value="Man Shoes">Man Shoes</option>
+              <option value="Man Accessaries">Man Accessaries</option>
             </select>
             <small id="categoryHelp" class="form-text text-muted"><span class="text-danger">* Required.</span> Select a category for this item.</small>
           </div>

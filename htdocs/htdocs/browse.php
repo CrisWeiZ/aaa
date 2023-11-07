@@ -21,7 +21,8 @@
               <i class="fa fa-search"></i>
             </span>
           </div>
-          <input type="text" class="form-control border-left-0" id="keyword" placeholder="Search for anything">
+          <input type="text" value="<?=$_GET["keyword"]?>" name="keyword" class="form-control border-left-0" id="keyword" placeholder="Search for anything">
+          <!-- value="<?=$_GET["keyword"]?>" for maintaining previous values after search -->
           
         </div>
       </div>
@@ -29,30 +30,32 @@
     <div class="col-md-3 pr-0">
       <div class="form-group">
         <label for="cat" class="sr-only">Search within:</label>
-        <select class="form-control" id="cat">
-         <option selected value="all">All Categories</option>
-          <option value="wtop">Woman Tops</option>
-          <option value="wouter">Woman Outerwear</option>
-          <option value="wpants">Woman Pants and Jeans</option>
-          <option value="wdress">Woman Dress and Jumpsuits</option>
-          <option value="wshoes">Woman Shoes</option>
-          <option value="wacc">Woman Accessories</option>
-          <option value="wskirts">Woman Skirts</option>
-          <option value="mtop">Man Tops</option>
-          <option value="mouter">Man Outerwears</option>
-          <option value="mpants">Man Pants and Jeans</option>
-          <option value="mshoes">Man Shoes</option>
-          <option value="macc">Man Accessaries</option>
-        </select>
+        <select class="form-control" name="cat" id="cat">
+          <!-- <?php if($_GET["cat"] == "xxxx") echo "selected"; ?>> for maintaining previous values after search -->
+          <option value="">All Categories</option>
+          <option value="Woman Tops" <?php if($_GET["cat"] == "Woman Tops") echo "selected"; ?>>Woman Tops</option>
+          <option value="Woman Outerwears" <?php if($_GET["cat"] == "Woman Outerwears") echo "selected"; ?>>Woman Outerwears</option>
+          <option value="Woman Pants and Jeans" <?php if($_GET["cat"] == "Woman Pants and Jeans") echo "selected"; ?>>Woman Pants and Jeans</option>
+          <option value="Woman Dress and Jumpsuit"<?php if($_GET["cat"] == "Woman Dress and Jumpsuit") echo "selected"; ?>>Woman Dress and Jumpsuits</option>
+          <option value="Woman Shoes"<?php if($_GET["cat"] == "Woman Pants and Jeans") echo "selected"; ?>>Woman Shoes</option>
+          <option value="Woman Accessories"<?php if($_GET["cat"] == "Woman Shoes") echo "selected"; ?>>Woman Accessories</option>
+          <option value="Woman Skirts"<?php if($_GET["cat"] == "Woman Skirts") echo "selected"; ?>>Woman Skirts</option>
+          <option value="Man Tops"<?php if($_GET["cat"] == "Man Tops") echo "selected"; ?>>Man Tops</option>
+          <option value="Man Outerwears"<?php if($_GET["cat"] == "Man Outerwears") echo "selected"; ?>>Man Outerwears</option>
+          <option value="Man Pants and Jeans"<?php if($_GET["cat"] == "Man Pants and Jeans") echo "selected"; ?>>Man Pants and Jeans</option>
+          <option value="Man Shoes"<?php if($_GET["cat"] == "Man Shoes") echo "selected"; ?>>Man Shoes</option>
+          <option value="Man Accessaries"<?php if($_GET["cat"] == "Man Accessaries") echo "selected"; ?>>Man Accessaries</option>
+        </select >
       </div>
     </div>
     <div class="col-md-3 pr-0">
       <div class="form-inline">
         <label class="mx-2" for="order_by">Sort by:</label>
-        <select class="form-control" id="order_by">
-          <option selected value="pricelow">Price (low to high)</option>
-          <option value="pricehigh">Price (high to low)</option>
-          <option value="date">Soonest expiry</option>
+        <select class="form-control" name="order_by" id="order_by">
+          <!-- <?= $_GET["order_by"] == "pricelow"? "selected": ""?>> for maintaining previous values after search -->
+          <option value="pricelow" <?= $_GET["order_by"] == "pricelow"? "selected": ""?>>Price (low to high)</option>
+          <option value="pricehigh" <?= $_GET["order_by"] == "pricehigh"? "selected": ""?>>Price (high to low)</option>
+          <option value="date" <?= $_GET["order_by"] == "date"? "selected": ""?>>Soonest expiry</option>
         </select>
       </div>
     </div>
@@ -64,38 +67,29 @@
 </div> <!-- end search specs bar -->
 
 
+  
 
 
 <?php
+  // Retrieve these from the URL 
+  // TODO: Define behavior if a keyword/category/order_by has not been specified.
   
-//$error = array('keyword'=>'','cat'=>'','order_by'=>'')
-  // Retrieve these from the URL
   if (!isset($_GET['keyword'])) {
-    // TODO: Define behavior if a keyword has not been specified.
-    //$error['keyword']= "Error: No keyword specified!";
-    echo '
-              *No keyword specified*
-            ';
-
+    echo '<p class="text-danger">*No keyword specified*</p>';
   }
   else {
     $keyword = $_GET['keyword'];
   }
 
   if (!isset($_GET['cat'])) {
-    // TODO: Define behavior if a category has not been specified.
-    echo "*No category specified* ";
-    
+    echo '<p class="text-danger">*No category specified*</p>';
   }
   else {
     $category = $_GET['cat'];
   }
   
   if (!isset($_GET['order_by'])) {
-    // TODO: Define behavior if an order_by value has not been specified.
-    echo "*No ordering method specified* ";
-
-  
+    echo '<p class="text-danger">*No ordering method specified*</p>';
   }
   else {
     $ordering = $_GET['order_by'];
@@ -108,104 +102,92 @@
     $curr_page = $_GET['page'];
   }
 
+
+
   /* TODO: Use above values to construct a query. Use this query to 
      retrieve data from the database. (If there is no form data entered,
      decide on appropriate default value/default query to make. */
-
-
-  //DEFAULT (not all criteria specified)
   
-  if (!isset($_GET['keyword'])|| !isset($_GET['cat'])|| !isset($_GET['order_by'])) {
-    // This uses a function defined in utilities.php
-    $con = mysqli_connect('localhost', 'panisa', '987654', 'Fashionswap');
-  $query = "SELECT * FROM Auction Category";
+  $results_per_page = 10; // for pagination
+  $num_results = 0; // Initialize the counter, used later for pagination
+  $offset = $results_per_page * ($curr_page-1); //for pagination
+  $query = "SELECT Auction.*, Count_Bid.numBid
+            FROM Auction 
+            LEFT JOIN (select auctionID, count(1) as numBid from Bid group by auctionID) Count_Bid 
+            ON Auction.auctionID = Count_Bid.auctionID WHERE 1=1";
+  //Base queries: Left join Auction table and Count_Bid table (created to count no. of bid from Bid table)
+  if(isset($keyword)) {
+    $query = $query . " AND (Auction.itemName like '%$keyword%' OR Auction.details like '%$keyword%')";
+  }
+
+  if(isset($category) && $category != '') {
+    $query = $query . " AND Auction.cName = '$category'";
+  } 
+
+  if(isset($ordering)) {
+    if($ordering == 'pricehigh') {
+      $query = $query . " ORDER BY Auction.startPrice DESC";
+    }
+    else if($ordering == 'pricelow') {
+      $query = $query . " ORDER BY Auction.startPrice";
+    }
+    else if($ordering == 'date') {
+      $query = $query . " ORDER BY AuctionendTime";
+    }
+    
+  }
+  //If statements to add additional queries depending on results from form
+
+  
+  $con = mysqli_connect('localhost', 'panisa', '987654', 'Fashionswap');
   $result = mysqli_query($con,$query)
-    or die('Error making select users query'.mysqli_connect_error());
-   
-    while ($row = mysqli_fetch_array($result))
-    {
-      $item_id = $row['auctionID'];
-      $title = $row['itemName'];
-      // $description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum eget rutrum ipsum. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Phasellus feugiat, ipsum vel egestas elementum, sem mi vestibulum eros, et facilisis dui nisi eget metus. In non elit felis. Ut lacus sem, pulvinar ultricies pretium sed, viverra ac sapien. Vivamus condimentum aliquam rutrum. Phasellus iaculis faucibus pellentesque. Sed sem urna, maximus vitae cursus id, malesuada nec lectus. Vestibulum scelerisque vulputate elit ut laoreet. Praesent vitae orci sed metus varius posuere sagittis non mi.";
-      $current_price = $row['startPrice'];
-      $num_bids = 1;
-      $end_date = $row['endTime'];
-    print_listing_li($item_id, $title, $description, $current_price, $num_bids, $end_date);
-    mysqli_close($con); 
-  }
-  }
-    //SEARCH CRITERIA INPUT
-    // category
-  if (isset($_GET['cat'])){
-    $con = mysqli_connect('localhost', 'panisa', '987654', 'Fashionswap');
-    $query = "SELECT * FROM Auction Category BY Category    ";
-    $result = mysqli_query($con,$query)
-      or die('Error making select users query'.mysqli_connect_error());
-     
-      while ($row = mysqli_fetch_array($result))
-      {
+  or die('Error making select user query'.mysqli_connect_error());
+
+  $i = 1; //row counter to iterate through and assign page to it
+  while ($row = mysqli_fetch_array($result))
+  {   
+      $num_results++; // Increment the counter for each row.
+      if($i >= $offset+1 && $i <= $offset+$results_per_page) { //e.g. if($i >= 11 && $i <= 20)
         $item_id = $row['auctionID'];
         $title = $row['itemName'];
-        // $description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum eget rutrum ipsum. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Phasellus feugiat, ipsum vel egestas elementum, sem mi vestibulum eros, et facilisis dui nisi eget metus. In non elit felis. Ut lacus sem, pulvinar ultricies pretium sed, viverra ac sapien. Vivamus condimentum aliquam rutrum. Phasellus iaculis faucibus pellentesque. Sed sem urna, maximus vitae cursus id, malesuada nec lectus. Vestibulum scelerisque vulputate elit ut laoreet. Praesent vitae orci sed metus varius posuere sagittis non mi.";
+        $details = $row['details'];
         $current_price = $row['startPrice'];
-        $num_bids = 1;
+        $num_bids = 0;
+        if(isset($row['numBid'])) {
+          $num_bids = $row['numBid'];
+        }
         $end_date = $row['endTime'];
-      print_listing_li($item_id, $title, $description, $current_price, $num_bids, $end_date);
-      mysqli_close($con); 
-    }
+        // This uses a function defined in utilities.php
+        print_listing_li($item_id, $title, $details, $current_price, $num_bids, $end_date);
+      }
+      $i++;
+      
   }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-
-
-
-
-
-  /* For the purposes of pagination, it would also be helpful to know the
-     total number of results that satisfy the above query */
-  $num_results = 96; // TODO: Calculate me for real
-  $results_per_page = 10;
+  
+  // To show no matching result after searching
+  if($num_results === 0){
+    echo 'No matching result';
+  }
+   
+  
+  // TODO: Calculate me for real > $num_results incremented through while loop
   $max_page = ceil($num_results / $results_per_page);
+
+  mysqli_close($con);
+
+
 ?>
 
 <div class="container mt-5">
 
-<!-- TODO: If result set is empty, print an informative message. Otherwise... -->
+<!-- DONE ABOVE - TODO: If result set is empty, print an informative message. Otherwise... -->
 
 <ul class="list-group">
-
-<!-- TODO: Use a while loop to print a list item for each auction listing
+<!-- DONE ABOVE- print_listing_li($item_id, $title, $details, $current_price, $num_bids, $end_date); -->
+    
+<!-- DONE ABOVE- TODO: Use a while loop to print a list item for each auction listing
      retrieved from the query -->
 
-<!-- <?php
-  // Demonstration of what listings will look like using dummy data.
-  
-  $item_id = "87021";
-  $title = "Dummy title";
-  $description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum eget rutrum ipsum. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Phasellus feugiat, ipsum vel egestas elementum, sem mi vestibulum eros, et facilisis dui nisi eget metus. In non elit felis. Ut lacus sem, pulvinar ultricies pretium sed, viverra ac sapien. Vivamus condimentum aliquam rutrum. Phasellus iaculis faucibus pellentesque. Sed sem urna, maximus vitae cursus id, malesuada nec lectus. Vestibulum scelerisque vulputate elit ut laoreet. Praesent vitae orci sed metus varius posuere sagittis non mi.";
-  $current_price = 30;
-  $num_bids = 1;
-  $end_date = new DateTime('2020-09-16T11:00:00');
-  
-  // This uses a function defined in utilities.php
-  print_listing_li($item_id, $title, $description, $current_price, $num_bids, $end_date);
-  
-  $item_id = "516";
-  $title = "Different title";
-  $description = "Very short description.";
-  $current_price = 13.50;
-  $num_bids = 3;
-  $end_date = new DateTime('2020-11-02T00:00:00');
-  
-  print_listing_li($item_id, $title, $description, $current_price, $num_bids, $end_date);
-?> -->
 
 </ul>
 
