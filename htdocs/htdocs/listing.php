@@ -2,17 +2,40 @@
 <?php require("utilities.php")?>
 
 <?php
-  // Get info from the URL:
-  $item_id = $_GET['item_id'];
+  // Connect to the database first
+$con = mysqli_connect('localhost', 'panisa', '987654', 'Fashionswap');
+if (!$con) {
+    die('Error connecting to the database: ' . mysqli_connect_error());
+}
 
-  // TODO: Use item_id to make a query to the database.
+$item_id = $_GET["auctionID"];
+$query = "SELECT Auction.*, Count_Bid.numBid
+          FROM Auction 
+          LEFT JOIN (SELECT auctionID, COUNT(1) as numBid FROM Bid GROUP BY auctionID) Count_Bid 
+          ON Auction.auctionID = Count_Bid.auctionID";
 
-  // DELETEME: For now, using placeholder data.
-  $title = "Placeholder title";
-  $description = "Description blah blah blah";
-  $current_price = 30.50;
-  $num_bids = 1;
-  $end_time = new DateTime('2020-11-02T00:00:00');
+// Execute the query
+$result = mysqli_query($con, $query);
+if (!$result) {
+    die('Error making select user query: ' . mysqli_error($con));
+}
+
+// Fetch the results
+$row = mysqli_fetch_array($result);
+$item_id = $row['auctionID'];
+$title = $row['itemName'];
+$description = $row['details'];
+$current_price = $row['startPrice'];
+$num_bids = isset($row['numBid']) ? $row['numBid'] : 0;
+$end_date = $row['endTime'];
+
+
+// This uses a function defined in utilities.php
+print_listing_li($item_id, $title, $description, $current_price, $num_bids, $end_date);
+
+
+// Close the database connection
+mysqli_close($con);
 
   // TODO: Note: Auctions that have ended may pull a different set of data,
   //       like whether the auction ended in a sale or was cancelled due
@@ -22,7 +45,7 @@
   $now = new DateTime();
   
   if ($now < $end_time) {
-    $time_to_end = date_diff($now, $end_time);
+    $time_to_end = date_create(date_diff($now, $end_time));
     $time_remaining = ' (in ' . display_time_remaining($time_to_end) . ')';
   }
   
@@ -33,6 +56,30 @@
   $watching = false;
 ?>
 
+<?php
+$con = mysqli_connect('localhost', 'panisa', '987654', 'Fashionswap');
+if (!$con) {
+    die('Error connecting to the database: ' . mysqli_connect_error());
+}
+
+$query = "SELECT Auction.*, MAX(Bid.bidPrice) AS CurrentBidPrice
+          FROM Auction 
+          LEFT JOIN Bid
+          ON Auction.auctionID = Bid.auctionID
+          GROUP BY Auction.auctionID";
+
+$result = mysqli_query($con, $query);
+if (!$result) {
+    die('Error making select user query: ' . mysqli_error($con));
+}
+
+// Fetch the results
+$row = mysqli_fetch_array($result);
+$current_price = $row['CurrentBidPrice'];
+
+mysqli_close($con);
+
+?>
 
 <div class="container">
 
@@ -44,7 +91,7 @@
 <?php
   /* The following watchlist functionality uses JavaScript, but could
      just as easily use PHP as in other places in the code */
-  if ($now < $end_time):
+  if ($now < date_create($end_time)):
 ?>
     <div id="watch_nowatch" <?php if ($has_session && $watching) echo('style="display: none"');?> >
       <button type="button" class="btn btn-outline-secondary btn-sm" onclick="addToWatchlist()">+ Add to watchlist</button>
@@ -69,11 +116,12 @@
   <div class="col-sm-4"> <!-- Right col with bidding info -->
 
     <p>
-<?php if ($now > $end_time): ?>
+<?php if ($now > date_create($end_time)): ?>
      This auction ended <?php echo(date_format($end_time, 'j M H:i')) ?>
      <!-- TODO: Print the result of the auction here? -->
 <?php else: ?>
-     Auction ends <?php echo(date_format($end_time, 'j M H:i') . $time_remaining) ?></p>  
+  
+     <!-- Auction ends in <?php echo((date_create($end_time, 'j M H:i')). $time_remaining) ?></p>   -->
     <p class="lead">Current bid: £<?php echo(number_format($current_price, 2)) ?></p>
 
     <!-- Bidding form -->

@@ -150,7 +150,7 @@
       if($i >= $offset+1 && $i <= $offset+$results_per_page) { //e.g. if($i >= 11 && $i <= 20)
         $item_id = $row['auctionID'];
         $title = $row['itemName'];
-        $details = $row['details'];
+        $description = $row['details'];
         $current_price = $row['startPrice'];
         $num_bids = 0;
         if(isset($row['numBid'])) {
@@ -158,7 +158,7 @@
         }
         $end_date = $row['endTime'];
         // This uses a function defined in utilities.php
-        print_listing_li($item_id, $title, $details, $current_price, $num_bids, $end_date);
+        print_listing_li($item_id, $title, $description, $current_price, $num_bids, $end_date);
       }
       $i++;
       
@@ -183,7 +183,7 @@
 <!-- DONE ABOVE - TODO: If result set is empty, print an informative message. Otherwise... -->
 
 <ul class="list-group">
-<!-- DONE ABOVE- print_listing_li($item_id, $title, $details, $current_price, $num_bids, $end_date); -->
+<!-- DONE ABOVE- print_listing_li($item_id, $title, $description, $current_price, $num_bids, $end_date); -->
     
 <!-- DONE ABOVE- TODO: Use a while loop to print a list item for each auction listing
      retrieved from the query -->
