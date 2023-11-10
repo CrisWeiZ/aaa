@@ -8,7 +8,7 @@ if (!$con) {
     die('Error connecting to the database: ' . mysqli_connect_error());
 }
 
-$item_id = $_GET["auctionID"];
+//$item_id = $_GET["auctionID"];
 $query = "SELECT Auction.*, Count_Bid.numBid
           FROM Auction 
           LEFT JOIN (SELECT auctionID, COUNT(1) as numBid FROM Bid GROUP BY auctionID) Count_Bid 
@@ -27,11 +27,11 @@ $title = $row['itemName'];
 $description = $row['details'];
 $current_price = $row['startPrice'];
 $num_bids = isset($row['numBid']) ? $row['numBid'] : 0;
-$end_date = $row['endTime'];
+$end_time = $row['endTime'];
 
 
 // This uses a function defined in utilities.php
-print_listing_li($item_id, $title, $description, $current_price, $num_bids, $end_date);
+print_listing_li($item_id, $title, $description, $current_price, $num_bids, $end_time);
 
 
 // Close the database connection
@@ -130,7 +130,7 @@ mysqli_close($con);
         <div class="input-group-prepend">
           <span class="input-group-text">£</span>
         </div>
-	    <input type="number" class="form-control" id="bid">
+	    <input type="number" class="form-control" name= "bid" id="bid">
       </div>
       <button type="submit" class="btn btn-primary form-control">Place bid</button>
     </form>

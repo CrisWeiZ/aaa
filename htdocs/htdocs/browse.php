@@ -6,10 +6,14 @@
 
 <h2 class="my-3">Browse listings</h2>
 
+
+
+
 <div id="searchSpecs">
 <!-- When this form is submitted, this PHP page is what processes it.
      Search/sort specs are passed to this page through parameters in the URL
      (GET method of passing data to a page). -->
+
 <form method="get" action="browse.php">
   <div class="row">
     <div class="col-md-5 pr-0">
@@ -21,43 +25,42 @@
               <i class="fa fa-search"></i>
             </span>
           </div>
-          <input type="text" value="<?=$_GET["keyword"]?>" name="keyword" class="form-control border-left-0" id="keyword" placeholder="Search for anything">
-          <!-- value="<?=$_GET["keyword"]?>" for maintaining previous values after search -->
+          <input type="text" value="<?= isset($_GET["keyword"]) ? $_GET["keyword"] : '' ?>" name="keyword" class="form-control border-left-0" id="keyword" placeholder="Search for anything">
+
           
         </div>
       </div>
     </div>
     <div class="col-md-3 pr-0">
-      <div class="form-group">
-        <label for="cat" class="sr-only">Search within:</label>
-        <select class="form-control" name="cat" id="cat">
-          <!-- <?php if($_GET["cat"] == "xxxx") echo "selected"; ?>> for maintaining previous values after search -->
-          <option value="">All Categories</option>
-          <option value="Woman Tops" <?php if($_GET["cat"] == "Woman Tops") echo "selected"; ?>>Woman Tops</option>
-          <option value="Woman Outerwears" <?php if($_GET["cat"] == "Woman Outerwears") echo "selected"; ?>>Woman Outerwears</option>
-          <option value="Woman Pants and Jeans" <?php if($_GET["cat"] == "Woman Pants and Jeans") echo "selected"; ?>>Woman Pants and Jeans</option>
-          <option value="Woman Dress and Jumpsuit"<?php if($_GET["cat"] == "Woman Dress and Jumpsuit") echo "selected"; ?>>Woman Dress and Jumpsuits</option>
-          <option value="Woman Shoes"<?php if($_GET["cat"] == "Woman Pants and Jeans") echo "selected"; ?>>Woman Shoes</option>
-          <option value="Woman Accessories"<?php if($_GET["cat"] == "Woman Shoes") echo "selected"; ?>>Woman Accessories</option>
-          <option value="Woman Skirts"<?php if($_GET["cat"] == "Woman Skirts") echo "selected"; ?>>Woman Skirts</option>
-          <option value="Man Tops"<?php if($_GET["cat"] == "Man Tops") echo "selected"; ?>>Man Tops</option>
-          <option value="Man Outerwears"<?php if($_GET["cat"] == "Man Outerwears") echo "selected"; ?>>Man Outerwears</option>
-          <option value="Man Pants and Jeans"<?php if($_GET["cat"] == "Man Pants and Jeans") echo "selected"; ?>>Man Pants and Jeans</option>
-          <option value="Man Shoes"<?php if($_GET["cat"] == "Man Shoes") echo "selected"; ?>>Man Shoes</option>
-          <option value="Man Accessaries"<?php if($_GET["cat"] == "Man Accessaries") echo "selected"; ?>>Man Accessaries</option>
-        </select >
-      </div>
+          <div class="form-group">
+              <label for="cat" class="sr-only">Search within:</label>
+              <select class="form-control" name="cat" id="cat">
+                  <option value="">All Categories</option>
+                  <option value="Woman Tops" <?php if(isset($_GET["cat"]) && $_GET["cat"] == "Woman Tops") echo "selected"; ?>>Woman Tops</option>
+                  <option value="Woman Outerwears" <?php if(isset($_GET["cat"]) && $_GET["cat"] == "Woman Outerwears") echo "selected"; ?>>Woman Outerwears</option>
+                  <option value="Woman Pants and Jeans" <?php if(isset($_GET["cat"]) && $_GET["cat"] == "Woman Pants and Jeans") echo "selected"; ?>>Woman Pants and Jeans</option>
+                  <option value="Woman Dress and Jumpsuit" <?php if(isset($_GET["cat"]) && $_GET["cat"] == "Woman Dress and Jumpsuit") echo "selected"; ?>>Woman Dress and Jumpsuits</option>
+                  <option value="Woman Shoes" <?php if(isset($_GET["cat"]) && $_GET["cat"] == "Woman Shoes") echo "selected"; ?>>Woman Shoes</option>
+                  <option value="Woman Accessories" <?php if(isset($_GET["cat"]) && $_GET["cat"] == "Woman Accessories") echo "selected"; ?>>Woman Accessories</option>
+                  <option value="Woman Skirts" <?php if(isset($_GET["cat"]) && $_GET["cat"] == "Woman Skirts") echo "selected"; ?>>Woman Skirts</option>
+                  <option value="Man Tops" <?php if(isset($_GET["cat"]) && $_GET["cat"] == "Man Tops") echo "selected"; ?>>Man Tops</option>
+                  <option value="Man Outerwears" <?php if(isset($_GET["cat"]) && $_GET["cat"] == "Man Outerwears") echo "selected"; ?>>Man Outerwears</option>
+                  <option value="Man Pants and Jeans" <?php if(isset($_GET["cat"]) && $_GET["cat"] == "Man Pants and Jeans") echo "selected"; ?>>Man Pants and Jeans</option>
+                  <option value="Man Shoes" <?php if(isset($_GET["cat"]) && $_GET["cat"] == "Man Shoes") echo "selected"; ?>>Man Shoes</option>
+                  <option value="Man Accessories" <?php if(isset($_GET["cat"]) && $_GET["cat"] == "Man Accessories") echo "selected"; ?>>Man Accessories</option>
+              </select>
+          </div>
     </div>
     <div class="col-md-3 pr-0">
       <div class="form-inline">
-        <label class="mx-2" for="order_by">Sort by:</label>
-        <select class="form-control" name="order_by" id="order_by">
-          <!-- <?= $_GET["order_by"] == "pricelow"? "selected": ""?>> for maintaining previous values after search -->
-          <option value="pricelow" <?= $_GET["order_by"] == "pricelow"? "selected": ""?>>Price (low to high)</option>
-          <option value="pricehigh" <?= $_GET["order_by"] == "pricehigh"? "selected": ""?>>Price (high to low)</option>
-          <option value="date" <?= $_GET["order_by"] == "date"? "selected": ""?>>Soonest expiry</option>
-        </select>
+          <label class="mx-2" for="order_by">Sort by:</label>
+          <select class="form-control" name="order_by" id="order_by">
+              <option value="pricelow" <?= isset($_GET["order_by"]) && $_GET["order_by"] == "pricelow" ? "selected" : "" ?>>Price (low to high)</option>
+              <option value="pricehigh" <?= isset($_GET["order_by"]) && $_GET["order_by"] == "pricehigh" ? "selected" : "" ?>>Price (high to low)</option>
+              <option value="date" <?= isset($_GET["order_by"]) && $_GET["order_by"] == "date" ? "selected" : "" ?>>Soonest expiry</option>
+          </select>
       </div>
+
     </div>
     <div class="col-md-1 px-0">
       <button type="submit" class="btn btn-primary">Search</button>

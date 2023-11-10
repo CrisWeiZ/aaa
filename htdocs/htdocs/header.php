@@ -22,7 +22,7 @@
   <!-- Custom CSS file -->
   <link rel="stylesheet" href="css/custom.css">
 
-  <title>[My Auction Site] FASHIONSWAP</title>
+  <title>[My Auction Site] <!--CHANGEME!--></title>
 </head>
 
 
@@ -30,7 +30,7 @@
 
 <!-- Navbars -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light mx-2">
-  <a class="navbar-brand" href="#">FASHIONSWAP</a>
+  <a class="navbar-brand" href="#">Site Name <!--CHANGEME!--></a>
   <ul class="navbar-nav ml-auto">
     <li class="nav-item">
     
