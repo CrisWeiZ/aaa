@@ -8,11 +8,12 @@ if (!$con) {
     die('Error connecting to the database: ' . mysqli_connect_error());
 }
 
-//$item_id = $_GET["auctionID"];
+$item_id = $_GET['item_id'];
 $query = "SELECT Auction.*, Count_Bid.numBid
           FROM Auction 
           LEFT JOIN (SELECT auctionID, COUNT(1) as numBid FROM Bid GROUP BY auctionID) Count_Bid 
-          ON Auction.auctionID = Count_Bid.auctionID";
+          ON Auction.auctionID = Count_Bid.auctionID
+          WHERE Auction.auctionID = '$item_id'";
 
 // Execute the query
 $result = mysqli_query($con, $query);
@@ -45,7 +46,7 @@ mysqli_close($con);
   $now = new DateTime();
   
   if ($now < $end_time) {
-    $time_to_end = date_create(date_diff($now, $end_time));
+    $time_to_end = (date_diff($now, $end_time));
     $time_remaining = ' (in ' . display_time_remaining($time_to_end) . ')';
   }
   
@@ -116,13 +117,19 @@ mysqli_close($con);
   <div class="col-sm-4"> <!-- Right col with bidding info -->
 
     <p>
-<?php if ($now > date_create($end_time)): ?>
-     This auction ended <?php echo(date_format($end_time, 'j M H:i')) ?>
-     <!-- TODO: Print the result of the auction here? -->
-<?php else: ?>
-  
-     <!-- Auction ends in <?php echo((date_create($end_time, 'j M H:i')). $time_remaining) ?></p>   -->
-    <p class="lead">Current bid: £<?php echo(number_format($current_price, 2)) ?></p>
+    <?php 
+    $end_time_obj = date_create($end_time);
+    if ($now > $end_time_obj): ?>
+        This auction ended <?php echo(date_format($end_time_obj, 'j M H:i')) ?>
+        <!-- TODO: Print the result of the auction here? -->
+    <?php else: ?>
+        <!-- Auction ends in -->
+        <?php 
+        $time_to_end = date_diff($now, $end_time_obj);
+        $time_remaining = display_time_remaining($time_to_end);
+        ?>
+        <p>Auction ends in <?php echo date_format($end_time_obj, 'j M H:i') . ' (' . $time_remaining . ')'; ?></p>
+        <p class="lead">Current bid: £<?php echo(number_format($current_price, 2)); ?></p>
 
     <!-- Bidding form -->
     <form method="POST" action="place_bid.php">
@@ -140,6 +147,9 @@ mysqli_close($con);
   </div> <!-- End of right col with bidding info -->
 
 </div> <!-- End of row #2 -->
+
+
+
 
 
 
